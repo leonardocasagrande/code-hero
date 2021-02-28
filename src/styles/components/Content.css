@@ -1,0 +1,49 @@
+.content-container {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+@media(min-width: 600px) {
+    .content-container>div {
+        text-align: left !important;
+    }
+    .content-container input {
+        max-width: 295px;
+    }
+}
+
+.content-container>div {
+    max-width: 1140px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    flex: 1;
+}
+
+.content-container h1 {
+    margin-top: 40px;
+    margin-bottom: 16px;
+}
+
+.content-container label {
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.content-container input {
+    line-height: 32px;
+    border: 1px solid var(--background);
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background: url('./search.svg') no-repeat;
+    background-position: 95%;
+    background-color: var(--white);
+    margin-bottom: 40px;
+}
