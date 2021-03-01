@@ -19,7 +19,7 @@ export function Characters() {
                 {Array.isArray(data) && data.length ? (
                     data.map((ch) => (
                         <li key={ch.name}
-                         onClick={() => openCharacterModal(ch.id)}>
+                         onClick={() => openCharacterModal(ch)}>
                             <div className="character-container">
                                 <img style={{ width: '50px' }}
                                     src={`${ch.thumbnail.path}.${ch.thumbnail.extension}`}

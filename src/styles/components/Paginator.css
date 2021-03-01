@@ -1,6 +1,6 @@
 .arrow {
     border: solid var(--text-labels);
-    border-width: 0 3px 3px 0;
+    border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
 }
@@ -24,10 +24,6 @@
     border-radius: 5px;
 }
 
-.page-button:hover {
-    opacity: 0.5;
-}
-
 .paginator-container {
     display: flex;
     text-align: center;
@@ -37,7 +33,14 @@
     margin-bottom: 32px;
 }
 
-.page-button.active {
-    background: var(--button-active);
-    color: var(--white);
+.button-active {
+    background: var(--button-active) !important;
+    color: var(--white) !important;
+}
+
+.page-arrow-button {
+    border: none;
+    background: var(--background);
+    margin-right: 10px;
+    font-size: 0px;
 }

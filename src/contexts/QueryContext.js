@@ -9,7 +9,7 @@ export function QueryProvider({ children }) {
 
     const maxItemsPerPage = 10;
     const [character, setCharacter] = useState('');
-    const [characterComicData, setCharacterComicData] = useState(null);
+    const [characterData, setCharacterData] = useState(null);
     const [data, setData] = useState([]);
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
@@ -45,17 +45,30 @@ export function QueryProvider({ children }) {
         }
     }
 
-    function openCharacterModal(characterId) {
-        fetchCharacterComicsData(characterId);
+    function closeCharacterModal() {
+        setCharacterData(null);
+        setIsCharacterModalOpen(false);
+    }
+
+    function openCharacterModal(character) {
+        fetchCharacterComicsData(character);
         setIsCharacterModalOpen(true);
     }
 
-    async function fetchCharacterComicsData(characterId) {
-        const fullUrl = generateApiUrl(characterId, 'comics');
+    async function fetchCharacterComicsData(character) {
+        let fullUrl = generateApiUrl(character.id, 'comics');
+        fullUrl = `${fullUrl}&orderBy=-title`
         const res = await fetch(fullUrl);
         const teste = await res.json();
+        console.log(fullUrl)
+        console.log(teste);
         if(teste) {
-            setCharacterComicData(teste.data.results)
+            const data = {};
+            data.results = teste.data.results;
+            data.name = character.name;
+            data.description = character.description;
+            data.thumbnail = character.thumbnail;
+            setCharacterData(data)
         }
     }
 
@@ -65,11 +78,12 @@ export function QueryProvider({ children }) {
             page,
             data,
             maxPage,
-            characterComicData,
+            characterData,
             setCharacter,
             setPage,
             searchMarvelData,
-            openCharacterModal
+            openCharacterModal,
+            closeCharacterModal
         }}>
             {children}
             { isCharacterModalOpen && <CharacterModal />}
