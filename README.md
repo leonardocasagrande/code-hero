@@ -7,11 +7,12 @@
  <a href="#Instalação">Instalação</a> • 
  <a href="#Inicializar">Inicializar</a> • 
  <a href="#Linguagens e ferramentas">Linguagens e ferramentas</a> • 
+ <a href="#Autor">Autor</a>
 </p>
 
 ## Requisitos
 
-Somente é necessário que esteja instalado o Node.js na máquina
+É necessário que esteja instalado o Node.js(https://nodejs.org/en/) na máquina.
 
 ## Instalação
 
@@ -36,12 +37,11 @@ Somente é necessário que esteja instalado o Node.js na máquina
 ### HTML
 
 ### JavaScript
-- [React](http://facebook.github.io/react) .
+- [React](http://facebook.github.io/react)
 
 ### CSS
-
-### Autor
 ---
+## Autor
 
  <sub><b>Leonardo Casagrande</b></sub></a>
  <br/>
