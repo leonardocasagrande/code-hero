@@ -44,4 +44,5 @@ Somente é necessário que esteja instalado o Node.js na máquina
 ---
 
  <sub><b>Leonardo Casagrande</b></sub></a>
- ![Linkedin Badge](https://img.shields.io/badge/-Thiago-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/leonardo-casagrande-324501198/)](https://www.linkedin.com/in/leonardo-casagrande-324501198/) 
+ <br/>
+ ![Linkedin Badge](https://img.shields.io/badge/-Leonardo-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/leonardo-casagrande-324501198/)](https://www.linkedin.com/in/leonardo-casagrande-324501198/) 
