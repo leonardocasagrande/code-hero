@@ -12,7 +12,7 @@
 
 ## Requisitos
 
-É necessário que esteja instalado o Node.js(https://nodejs.org/en/) na máquina.
+É necessário que esteja instalado o [Node.js](https://nodejs.org/en/) na máquina.
 
 ## Instalação
 
