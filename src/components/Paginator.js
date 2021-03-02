@@ -48,10 +48,14 @@ export function Paginator(props) {
     //Variavel de controle de ser mobile
     const [isMobile, setIsMobile] = useState(false);
     //Quando monta, verifica o tamanho da tela e adiciona listener de alteração de tamanho.
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    //Quando desmonta, retira o listener de atualização de tela.
-    useEffect(() => () => window.removeEventListener("resize", updateSize), [] );
+    //Quando desmonta, retira o listener
+    useEffect(() => {
+        updateSize();
+        window.addEventListener("resize", updateSize);
+        return function cleanup() {
+            window.removeEventListener("resize", updateSize);
+        }
+    })
     let content = null;
     //Verifica se existe a página e a última página
     if (props.page && props.maxPage) {
