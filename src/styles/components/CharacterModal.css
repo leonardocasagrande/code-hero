@@ -11,7 +11,7 @@
 }
 
 .modal-container {
-    background: var(--white);
+    background: var(--background);
     width: 100%;
     max-width: 1000px;
     padding: 2rem 3rem;
@@ -19,15 +19,75 @@
     box-shadow: 0 0 60px rgba(0,0,0,0.05);
     text-align: center;
     position: relative;
-    max-height: 700px;
+    max-height: 90%;
     overflow: scroll;
 }
 
-.modal-container button {
+.modal-container .close-button {
     position: absolute;
     right: 0.5rem;
     top: 0.5rem;
     background: transparent;
     border: 0;
     font-size: 0px;
+}
+
+.modal-container p {
+    margin-bottom: 1rem;
+}
+
+.character-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.character-modal-tabs {
+    text-align: left;
+}
+
+.character-modal-tab {
+    background: var(--background);
+    border: none;
+    padding: 1.5rem 1.5rem;
+    transition: background-color ease-in-out 0.2s;
+}
+
+.character-modal-tab:hover {
+    background: var(--white);
+    opacity: 1;
+}
+
+.character-modal-tab.active {
+    background: var(--white);
+}
+
+.character-appearance-li:first-child {
+    margin-top: 0;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+
+@keyframes outAnimation {
+    100% {
+        opacity: 0;
+    }
+}
+
+@media(max-width: 600px) {
+    .modal-overlay {
+        top: 64px;
+    }
+    .modal-container {
+        max-height: unset;
+        height: 100%;
+        max-width: unset;
+        position: absolute;
+        left: 100%;
+        animation: slide 0.5s forwards;
+    }
+    @keyframes slide {
+        100% { left: 0; }
+    }
 }

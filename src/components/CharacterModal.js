@@ -1,39 +1,103 @@
-import { useContext } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useContext, useEffect, useState } from "react";
 import { QueryContext } from "../contexts/QueryContext";
 import '../styles/components/CharacterModal.css';
+import { Paginator } from "./Paginator";
 
 export function CharacterModal() {
-    const { characterData, closeCharacterModal } = useContext(QueryContext);
-    let content = <div class="loader">Loading...</div>
-    if (characterData) {
+    const [activeType, setActiveType] = useState('comics');
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => document.body.style.overflow = 'unset';
+    }, []);
+    const { characterData,
+        characterAppearancesData,
+        fetchCharacterAppearencesData,
+        closeCharacterModal,
+        modalPage,
+        setModalPage,
+        modalMaxPage } = useContext(QueryContext);
+
+    function tabChangeHandler(type) {
+        if (type !== activeType) {
+            setModalPage(1);
+            setActiveType(type);
+            fetchCharacterAppearencesData(characterData.id, type);
+        }
+    }
+
+
+    useEffect(() => {
+        fetchCharacterAppearencesData(characterData.id, activeType);
+    }, [modalPage, activeType])
+
+    const tabs = [{
+        type: 'comics',
+        text: 'HQ'
+    }, {
+        type: 'events',
+        text: 'Eventos'
+    },
+    {
+        type: 'series',
+        text: 'Séries'
+    }]
+
+    let content = <div className="loader">Loading...</div>
+    if (characterAppearancesData) {
         content = (
-            <div>
-                <img style={{ width: '50px' }}
-                                    src={`${characterData.thumbnail.path}.${characterData.thumbnail.extension}`}
-                                    alt={characterData.name} />
-                <h1>{characterData.name}</h1>
-                <p>{characterData.description}</p>
-                <ul>
-                    {characterData.results.map((el) => (
-                        <li>
+            <ul>
+                {Array.isArray(characterAppearancesData) && characterAppearancesData.length ? (
+                    characterAppearancesData.map((el) => (
+                        <li key={el.id} className="character-appearance-li">
                             <img style={{ width: '50px' }}
-                                    src={`${el.thumbnail.path}.${el.thumbnail.extension}`}
-                                    alt={el.title} />
+                                src={`${el.thumbnail.path}.${el.thumbnail.extension}`}
+                                alt={el.title} />
                             <span>{el.title}</span>
                         </li>
-                    ))}
-                </ul>
-            </div>
+                    ))
+                ) : <li className="character-appearance-li"><span>Nenhum registro encontrado</span></li>}
+            </ul>
         )
     }
 
     return (
-        <div className='modal-overlay' onClick={closeCharacterModal}>
+        <div className='modal-overlay' >
             <div className='modal-container'>
-                {content}
-                <button type="button" onClick={closeCharacterModal}>
+                <div>
+                    <div className="character-info">
+                        <img style={{ width: '50px', marginRight: '1rem' }}
+                            src={`${characterData.thumbnail.path}.${characterData.thumbnail.extension}`}
+                            alt={characterData.name} />
+                        <h2>{characterData.name}</h2>
+                    </div>
+                    <p>{characterData.description}</p>
+                    <div className="character-modal-tabs">
+                        {
+                            tabs.map((el) => {
+                                let classes = 'character-modal-tab';
+                                if (activeType === el.type) {
+                                    classes = classes.concat(' active');
+                                }
+                                return (
+                                    <button
+                                        key={el.type}
+                                        className={classes}
+                                        onClick={() => tabChangeHandler(el.type)}>
+                                        {el.text}
+                                    </button>
+                                )
+                            })
+                        }
+                    </div>
+                    {content}
+                </div>
+                <button type="button" onClick={closeCharacterModal}
+                    className="close-button">
                     <img src="/icons/close.svg" alt="Fechar modal" />
                 </button>
+                <Paginator page={modalPage} setPage={setModalPage} maxPage={modalMaxPage} />
             </div>
         </div>
     );

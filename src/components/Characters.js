@@ -4,21 +4,19 @@ import { QueryContext } from "../contexts/QueryContext";
 import '../styles/components/Characters.css';
 
 export function Characters() {
-    const { searchMarvelData, character, page, data, openCharacterModal } = useContext(QueryContext)
+    const { searchMarvelData, characterFilter, page, characterListData, openCharacterModal } = useContext(QueryContext)
 
     useEffect(() => {
-        console.log('teste');
         searchMarvelData();
-    }, [character, page]);
+    }, [characterFilter, page]);
 
-    return (
-        <div>
-            <div className="character-label">Personagem</div>
-            <div className="description-label">Descrição</div>
+    let content = <div className="loader">Loading...</div>
+    if(characterListData) {
+        content = (
             <ul>
-                {Array.isArray(data) && data.length ? (
-                    data.map((ch) => (
-                        <li key={ch.name}
+                {Array.isArray(characterListData) && characterListData.length ? (
+                    characterListData.map((ch) => (
+                        <li key={ch.name} className="character-list-item"
                          onClick={() => openCharacterModal(ch)}>
                             <div className="character-container">
                                 <img style={{ width: '50px' }}
@@ -35,6 +33,14 @@ export function Characters() {
                 ) : <li><span>Nenhum personagem encontrado</span></li>
                 }
             </ul>
+        )
+    }
+
+    return (
+        <div>
+            <div className="character-label">Personagem</div>
+            <div className="description-label">Descrição</div>
+            {content}
         </div>
     )
 }

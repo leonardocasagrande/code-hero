@@ -8,82 +8,99 @@ export const QueryContext = createContext({})
 export function QueryProvider({ children }) {
 
     const maxItemsPerPage = 10;
-    const [character, setCharacter] = useState('');
+    const [characterFilter, setCharacterFilter] = useState('');
     const [characterData, setCharacterData] = useState(null);
-    const [data, setData] = useState([]);
+    const [characterAppearancesData, setCharacterAppearancesData] = useState(null);
+    const [characterListData, setCharacterListData] = useState(null);
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
+    const [modalPage, setModalPage] = useState(1);
+    const [modalMaxPage, setModalMaxPage] = useState(1);
     const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
 
 
-    const PRIV_KEY = 'ea002a9e5d0c3f81ae14623ad6bbd98edfbae1d8';
-    const PUBLIC_KEY = '831701ac2cddfb2903bd19f00aa27627';
-    const url = 'https://gateway.marvel.com:443/v1/public/characters';
-    
+    const PRIV_KEY = process.env.REACT_APP_PRIV_KEY;
+    const PUBLIC_KEY = process.env.REACT_APP_PUBLIC_KEY;
+    const URL = process.env.REACT_APP_BASE_URL;
+
     function generateApiUrl(characterId, type) {
         const ts = new Date().getTime();
         const hash = md5(ts + PRIV_KEY + PUBLIC_KEY);
-        let fullUrl = url;
-        if(characterId) {
+        let fullUrl = URL;
+        if (characterId) {
             fullUrl = `${fullUrl}/${characterId}/${type}`;
         }
         return `${fullUrl}?apikey=${PUBLIC_KEY}&ts=${ts}&hash=${hash}`
     }
 
     async function searchMarvelData() {
+        setCharacterListData(null);
+        setMaxPage(null);
         const url = generateApiUrl();
         const offset = (page - 1) * maxItemsPerPage;
         let fullUrl = `${url}&offset=${offset}&limit=${maxItemsPerPage}`;
-        if (character) {
-            fullUrl = fullUrl + '&nameStartsWith=' + character;
+        if (characterFilter) {
+            fullUrl = fullUrl + '&nameStartsWith=' + characterFilter;
         }
         const res = await fetch(fullUrl);
-        const teste = await res.json();
-        setMaxPage(Math.ceil(teste.data.total / maxItemsPerPage));
-        if (teste) {
-            setData(teste.data.results);
-        }
+        const data = await res.json();
+        setMaxPage(Math.ceil(data.data.total / maxItemsPerPage));
+        setCharacterListData(data.data.results);
+
     }
 
     function closeCharacterModal() {
         setCharacterData(null);
+        setCharacterAppearancesData(null);
         setIsCharacterModalOpen(false);
     }
 
     function openCharacterModal(character) {
-        fetchCharacterComicsData(character);
+        if (window.innerWidth < 600) {
+            window.scrollTo(0, 0);
+        }
+        setCharacterData(character);
+        fetchCharacterAppearencesData(character.id, 'comics');
         setIsCharacterModalOpen(true);
     }
 
-    async function fetchCharacterComicsData(character) {
-        let fullUrl = generateApiUrl(character.id, 'comics');
-        fullUrl = `${fullUrl}&orderBy=-title`
-        const res = await fetch(fullUrl);
-        const teste = await res.json();
-        console.log(fullUrl)
-        console.log(teste);
-        if(teste) {
-            const data = {};
-            data.results = teste.data.results;
-            data.name = character.name;
-            data.description = character.description;
-            data.thumbnail = character.thumbnail;
-            setCharacterData(data)
+    async function fetchCharacterAppearencesData(characterId, type) {
+        setCharacterAppearancesData(null);
+        setModalMaxPage(null);
+        const offset = (modalPage - 1) * maxItemsPerPage;
+        let fullUrl = `${generateApiUrl(characterId, type)}&offset=${offset}&limit=${maxItemsPerPage}`;
+        switch (type) {
+            case 'comics' || 'series':
+                fullUrl = `${fullUrl}&orderBy=title`
+                break;
+            case 'events':
+                fullUrl = `${fullUrl}&orderBy=name`
+                break;
+            default:
         }
+        const res = await fetch(fullUrl);
+        const data = await res.json();
+        setCharacterAppearancesData(data.data.results);
+        setModalMaxPage(Math.ceil(data.data.total / maxItemsPerPage));
     }
 
     return (
         <QueryContext.Provider value={{
-            character,
+            characterFilter,
             page,
-            data,
+            modalPage,
+            characterListData,
             maxPage,
+            modalMaxPage,
             characterData,
-            setCharacter,
+            characterAppearancesData,
+            setCharacterFilter,
             setPage,
+            setModalPage,
             searchMarvelData,
             openCharacterModal,
-            closeCharacterModal
+            closeCharacterModal,
+            fetchCharacterAppearencesData
         }}>
             {children}
             { isCharacterModalOpen && <CharacterModal />}

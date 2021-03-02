@@ -53,6 +53,10 @@ input::placeholder {
   font-style: italic;
 }
 
+button {
+  transition: opacity 0.2s ease-in-out;
+}
+
 button:hover {
   opacity: 0.5;
 }
@@ -67,8 +71,6 @@ li {
   display: flex;
   align-items: center;
   padding: 24px 20px;
-  cursor: pointer;
-  transition: box-shadow 0.2s;
 }
 
 li>span {
@@ -76,9 +78,6 @@ li>span {
   font-weight: bold;
 }
 
-li:hover {
-  box-shadow: 0px 0px 5px #E67227;
-}
 .loader {
   margin: 100px auto;
   font-size: 25px;

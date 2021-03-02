@@ -2,12 +2,13 @@ import { useContext } from 'react';
 import '../styles/components/Content.css'
 import { QueryContext } from '../contexts/QueryContext'
 import { Characters } from './Characters';
+import {Paginator} from './Paginator';
 
-export function Content(props) {
-    const { character, setCharacter, setPage } = useContext(QueryContext);
+export function Content() {
+    const { characterFilter, setCharacterFilter, setPage, page, maxPage } = useContext(QueryContext);
 
     function handleChange(event) {
-        setCharacter(event.target.value);
+        setCharacterFilter(event.target.value);
         setPage(1);
     }
 
@@ -19,9 +20,11 @@ export function Content(props) {
                 <input type="text"
                     placeholder="Search"
                     onChange={handleChange}
-                    value={character} />
+                    value={characterFilter} />
                 <Characters />
+                <Paginator page={page} setPage={setPage} maxPage={maxPage} />
             </div>
+            
         </main>
     )
 }

@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { QueryContext } from "../contexts/QueryContext";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from "react";
 import '../styles/components/Paginator.css'
 
 function getPagesForView(page, maxPage, numberOfPages) {
@@ -20,59 +20,61 @@ function getPagesForView(page, maxPage, numberOfPages) {
 
 
 
-export function Paginator() {
+export function Paginator(props) {
     function updateSize() {
         const result = window.innerWidth < 600;
-        if(result !== isMobile) {
+        if (result !== isMobile) {
             setIsMobile(result);
-        }        
+        }
     }
-    const { page, setPage, maxPage } = useContext(QueryContext);
-    const [isMobile, setIsMobile] = useState(false);    
+    const [isMobile, setIsMobile] = useState(false);
     updateSize();
-    window.addEventListener("resize", updateSize)
-    let buttons = null;
-    if (page && maxPage) {
-        buttons = (
-            getPagesForView(page, maxPage, isMobile ? 3 : 5).map((el) => {
-                let classes = 'page-button';
-                if (el === page) {
-                    classes = classes.concat(' button-active');
-                }
-                return (
-                    <button onClick={() => setPage(el)}
-                        className={classes}
-                        key={el}>{el}</button>)
-            })
+    useEffect(() => window.addEventListener("resize", updateSize), []);
+    useEffect(() => () => window.removeEventListener("resize", updateSize), [] );
+    let content = null;
+    if (props.page && props.maxPage) {
+        content = (
+            <>
+                {props.page > 2 && (
+                    <button onClick={() => props.setPage(1)} className='page-arrow-button'>
+                        <i className='arrow left' />
+                        <i className='arrow left' />
+                    </button>
+                )}
+                {props.page > 1 && (
+                    <button onClick={() => props.setPage(props.page - 1)} className='page-arrow-button'>
+                        <i className='arrow left' />
+                    </button>
+                )}
+                {getPagesForView(props.page, props.maxPage, isMobile ? 3 : 5).map((el) => {
+                    let classes = 'page-button';
+                    if (el === props.page) {
+                        classes = classes.concat(' button-active');
+                    }
+                    return (
+                        <button onClick={() => props.setPage(el)}
+                            className={classes}
+                            key={el}>{el}</button>)
+                })}
+                {props.page < props.maxPage && (
+                    <button onClick={() => props.setPage(props.page + 1)} className='page-arrow-button'>
+                        <i className='arrow right' />
+                    </button>
+                )}
+                {props.page < props.maxPage - 1 && (
+                    <button onClick={() => props.setPage(props.maxPage)} className='page-arrow-button'>
+                        <i className='arrow right' />
+                        <i className='arrow right' />
+                    </button>
+                )}
+            </>
+
         )
     }
 
     return (
         <div className='paginator-container'>
-            {page > 2 && (
-                <button onClick={() => setPage(1)} className='page-arrow-button'>
-                    <i className='arrow left' />
-                    <i className='arrow left' />
-                </button>
-            )}
-            {page > 1 && (
-                <button onClick={() => setPage(page - 1)} className='page-arrow-button'>
-                    <i className='arrow left' />
-                </button>
-            )}
-            {buttons}
-            {page < maxPage && (
-                <button onClick={() => setPage(page + 1)} className='page-arrow-button'>
-                    <i className='arrow right' />
-                </button>
-            )}
-            {page < maxPage - 1 && (
-                <button onClick={() => setPage(maxPage)} className='page-arrow-button'>
-                    <i className='arrow right' />
-                    <i className='arrow right' />
-                </button>
-            )}
-
+            {content}
         </div>
     );
 }
