@@ -1,13 +1,16 @@
 import { Content } from './components/Content';
 import { Header } from './components/Header';
-import { QueryProvider } from './contexts/QueryContext';
+import { AppProvider } from './contexts/AppContext';
 
+/**
+ * Componente pai do aplicativo
+ */
 function App() {
   return (
-    <QueryProvider>
+    <AppProvider>
       <Header />
       <Content />
-    </QueryProvider>
+    </AppProvider>
   );
 }
 

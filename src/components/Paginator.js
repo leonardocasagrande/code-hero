@@ -2,36 +2,61 @@
 import { useEffect, useState } from "react";
 import '../styles/components/Paginator.css'
 
-function getPagesForView(page, maxPage, numberOfPages) {
-    const pageTotal = maxPage > numberOfPages ? numberOfPages : maxPage;
+/**
+ * 
+ * @param {number} page Página atual 
+ * @param {number} lastPage Última página de dados
+ * @param {number} numberOfPages Numero de páginas requeridas
+ */
+function getPagesForView(page, lastPage, numberOfPages) {
+    const pageTotal = lastPage > numberOfPages ? numberOfPages : lastPage;
     const result = [page];
     let i = 1;
     while (result.length < pageTotal) {
+        //Se a página anterior à atual for maior que 1, adiciona.
         if (page - i >= 1) {
             result.push(page - i)
         }
-        if (page + i <= maxPage) {
+        //Se a página posterior à atual for menor que a última, adiciona.
+        if (page + i <= lastPage) {
             result.push(page + i);
         }
         i++;
     }
+    //Ordena ascendentemente.
     return result.sort((a, b) => a - b);
 }
 
 
-
+/**
+ * 
+ * @param {Object} props Propriedades da paginação
+ * @param {number} page Página atual da paginação
+ * @param {function} setPage Função para definir a página atual
+ * @param {number} maxPage Última página de dados
+ */
 export function Paginator(props) {
+    /**
+     * Atualiza o tamanho da tela de acordo com o tamanho obtido.
+     */
     function updateSize() {
         const result = window.innerWidth < 600;
         if (result !== isMobile) {
             setIsMobile(result);
         }
     }
+    //Variavel de controle de ser mobile
     const [isMobile, setIsMobile] = useState(false);
-    updateSize();
-    useEffect(() => window.addEventListener("resize", updateSize), []);
+    
+    //Quando monta, verifica o tamanho da tela e adiciona listener de alteração de tamanho.
+    useEffect(() => {
+        updateSize();
+        window.addEventListener("resize", updateSize)
+    }, []);
+    //Quando desmonta, retira o listener de atualização de tela.
     useEffect(() => () => window.removeEventListener("resize", updateSize), [] );
     let content = null;
+    //Verifica se existe a página e a última página
     if (props.page && props.maxPage) {
         content = (
             <>
@@ -46,6 +71,7 @@ export function Paginator(props) {
                         <i className='arrow left' />
                     </button>
                 )}
+                {/* Caso seja mobile, renderiza 3 páginas para seleção, caso contrário, 5 */}
                 {getPagesForView(props.page, props.maxPage, isMobile ? 3 : 5).map((el) => {
                     let classes = 'page-button';
                     if (el === props.page) {

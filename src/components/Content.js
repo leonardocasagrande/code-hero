@@ -1,12 +1,20 @@
 import { useContext } from 'react';
 import '../styles/components/Content.css'
-import { QueryContext } from '../contexts/QueryContext'
-import { Characters } from './Characters';
+import { AppContext } from '../contexts/AppContext'
+import { CharacterList } from './CharacterList';
 import {Paginator} from './Paginator';
 
+/**
+ * Componente de agrupamento de conteúdo principal
+ */
 export function Content() {
-    const { characterFilter, setCharacterFilter, setPage, page, maxPage } = useContext(QueryContext);
+    //Obtém o filtro de nome, setter de filtro de nome, página, setter de página e página máxima.
+    const { characterFilter, setCharacterFilter, setPage, page, maxPage } = useContext(AppContext);
 
+    /**
+     * Handler de alteração no input de filtro de nome de personagem.
+     * @param {event} event 
+     */
     function handleChange(event) {
         setCharacterFilter(event.target.value);
         setPage(1);
@@ -21,10 +29,9 @@ export function Content() {
                     placeholder="Search"
                     onChange={handleChange}
                     value={characterFilter} />
-                <Characters />
+                <CharacterList />
                 <Paginator page={page} setPage={setPage} maxPage={maxPage} />
             </div>
-            
         </main>
     )
 }
