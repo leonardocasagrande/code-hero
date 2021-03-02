@@ -47,12 +47,9 @@ export function Paginator(props) {
     }
     //Variavel de controle de ser mobile
     const [isMobile, setIsMobile] = useState(false);
-    
     //Quando monta, verifica o tamanho da tela e adiciona listener de alteração de tamanho.
-    useEffect(() => {
-        updateSize();
-        window.addEventListener("resize", updateSize)
-    }, []);
+    updateSize();
+    window.addEventListener("resize", updateSize);
     //Quando desmonta, retira o listener de atualização de tela.
     useEffect(() => () => window.removeEventListener("resize", updateSize), [] );
     let content = null;
